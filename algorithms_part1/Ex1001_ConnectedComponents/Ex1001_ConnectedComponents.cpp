@@ -45,6 +45,12 @@ public:
 	void DFS(Vertex* v)
 	{
 		// TODO:
+		v->visited = true;
+		id[v->value] = count; // 어느 "연결된 요소"에 속하는 지를 기록
+
+		for (auto* w : v->out_neighbors)
+			if (!w->visited) 
+				DFS(w);
 	}
 
 	void ConnectedComponents()
@@ -52,20 +58,33 @@ public:
 		count = 0;
 		id.resize(vertices.size(), -1);
 
-		// TODO:
+		for (auto* v : this->vertices)
+			v->visited = false;
+
+		// TODO: //count-component 개수 //id마다 0, 1, 2 
+		for (Vertex* v : vertices)
+		{
+			if (!v->visited) 
+			{ 
+				DFS(v); 
+				count++;
+			}
+		}
+
 
 		// 결과 정리 후 출력
-		//vector<vector<int>> components(count);
-		//for (int s = 0; s < vertices.size(); s++)
-		//	components[id[s]].push_back(s);
-		//cout << count << " components" << endl;
-		//for (int i = 0; i < components.size(); i++)
-		//{
-		//	cout << "Component " << i + 1 << ": ";
-		//	for (auto v : components[i])
-		//		cout << v << " ";
-		//	cout << endl;
-		//}
+		vector<vector<int>> components(count);
+		for (int s = 0; s < vertices.size(); s++)
+			components[id[s]].push_back(s);
+		cout << count << " components" << endl;
+
+		for (int i = 0; i < components.size(); i++)
+		{
+			cout << "Component " << i + 1 << ": ";
+			for (auto v : components[i])
+				cout << v << " ";
+			cout << endl;
+		}
 	}
 
 private:

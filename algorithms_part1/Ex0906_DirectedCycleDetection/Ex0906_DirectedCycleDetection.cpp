@@ -69,12 +69,15 @@ public:
 
 		for (auto* v : vertices)
 		{
-			DetectCycle(v);
+			if (!v->visited)
+			{
+				DetectCycle(v);
 
-			if (!cycle.empty()) {
-				cout << "Cycle detected" << endl;
-				PrintCycle(cycle); // 출력할 때 역순으로 출력합니다.
-				return; // 싸이클을 하나라도 발견시 종료
+				if (!cycle.empty()) {
+					cout << "Cycle detected" << endl;
+					PrintCycle(cycle);
+					return;
+				}
 			}
 		}
 
@@ -96,20 +99,29 @@ public:
 
 		for (auto* w : v->out_neighbors)
 		{
-			if (!cycle.empty())
+			if (!cycle.empty()) // 이미 존재
 				return;
 			else if (!w->visited)
 			{
-				// TODO: prev[TODO] = TODO; // Kevin Bacon 예제 복습
+				// TODO: 
+				prev[w->index] = v; // Kevin Bacon 예제 복습
 
 				DetectCycle(w);
 			}
-			//else if ( TODO ) // 싸이클 발견!
-			//{
-			//	cout << "Cycle detected: " << w->index << endl;
+			else if (on_stack[w->index]) // 싸이클 발견!
+			{
+				cout << "Cycle detected: " << w->index << endl;
 
-			//	// TODO: 싸이클 저장, 이것도 Kevin Bacon 예제 복습
-			//}
+				// TODO: 싸이클 저장, 이것도 Kevin Bacon 예제 복습
+				Vertex* p = v;
+				while (p != w)
+				{
+					cycle.push_back(p);
+					p = prev[p->index];
+				}
+				cycle.push_back(w);
+				cycle.push_back(v);
+			}
 		}
 
 		on_stack[v->index] = false; // 재귀호출이 곧 끝난다는 것을 표기

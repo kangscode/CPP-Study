@@ -29,6 +29,11 @@ public:
 		vertices.reserve(keys.size());
 
 		// TODO: vertices와 table 초기화
+		for (auto k : keys)
+		{
+			vertices.push_back(new Vertex(k, table.size()));
+			table[k] = vertices.size() - 1;
+		}
 
 		// 확인용
 		for (auto v : vertices)
@@ -46,6 +51,7 @@ public:
 	void AddDiEdge(string kv, string kw)
 	{
 		// TODO: table 이용
+		AddDiEdge(table[kv], table[kw]);
 	}
 
 	void AddDiEdge(int v, int w) // 단방향 간선
@@ -56,6 +62,7 @@ public:
 	void DFS(string k)
 	{
 		// TODO: table 이용
+		DFS(table[k]);
 	}
 
 	void DFS(int source)
